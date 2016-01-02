@@ -91,6 +91,9 @@ type TaskList interface {
 	Title() string
 	SetTitle(title string)
 
+	Remote() string
+	SetRemote(remote string)
+
 	Find(index string) Task
 }
 
@@ -300,12 +303,14 @@ func (self *taskImpl) Attributes() map[string]string {
 type taskListImpl struct {
 	*taskNodeImpl
 	title string
+	remote string
 }
 
 func NewTaskList() TaskList {
 	return &taskListImpl{
 		taskNodeImpl: newTaskNode(-1),
 		title:        "",
+		remote:       "",
 	}
 }
 
@@ -347,6 +352,14 @@ func (self *taskListImpl) Title() string {
 
 func (self *taskListImpl) SetTitle(title string) {
 	self.title = title
+}
+
+func (self *taskListImpl) Remote() string {
+	return self.remote
+}
+
+func (self *taskListImpl) SetRemote(remote string) {
+	self.remote = remote
 }
 
 func ReparentTask(node TaskNode, below TaskNode) {

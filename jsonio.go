@@ -62,12 +62,14 @@ type marshalableTask struct {
 
 type marshalableTaskList struct {
 	Title string             `json:"title"`
+	Remote string            `json:remote"`
 	Tasks []*marshalableTask `json:"tasks"`
 }
 
 func toMarshalableTaskList(t TaskList) *marshalableTaskList {
 	return &marshalableTaskList{
 		Title: t.Title(),
+		Remote: t.Remote(),
 		Tasks: toMarshalableTask(t),
 	}
 }
@@ -97,6 +99,7 @@ func toMarshalableTask(n TaskNode) []*marshalableTask {
 func fromMarshalableTaskList(l *marshalableTaskList) TaskList {
 	tasks := NewTaskList()
 	tasks.SetTitle(l.Title)
+	tasks.SetRemote(l.Remote)
 	fromMarshalableTask(tasks, l.Tasks)
 	return tasks
 }

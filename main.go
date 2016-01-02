@@ -36,6 +36,9 @@ var titleFlag = goopt.Flag([]string{"--title"}, nil, "set the task list title", 
 var versionFlag = goopt.Flag([]string{"--version"}, nil, "show version", "")
 var infoFlag = goopt.Flag([]string{"-i", "--info"}, nil, "show information on a task", "")
 var importFlag = goopt.Flag([]string{"--import"}, nil, "import and synchronise TODO items from source code", "")
+var remoteFlag = goopt.Flag([]string{"--remote"}, nil, "add or print remote", "")
+var pullFlag = goopt.Flag([]string{"--pull"}, nil, "pull from remote", "")
+var pushFlag = goopt.Flag([]string{"--push"}, nil, "push to remote", "")
 
 // Options
 var priorityFlag = goopt.String([]string{"-p", "--priority"}, "medium", "priority of newly created tasks (veryhigh,high,medium,low,verylow)")
@@ -118,6 +121,20 @@ func doShowInfo(tasks TaskList, index string) {
 	view.ShowTaskInfo(task)
 }
 
+func doPrintRemote(tasks TaskList) {
+	if len(tasks.Remote()) == 0 {
+		fmt.Printf("No remote set\n")
+	} else {
+		fmt.Printf("%s\n", tasks.Remote())
+	}
+}
+
+func doSetRemote(tasks TaskList, remote string) {
+	tasks.SetRemote(remote)
+	saveTaskList(tasks)
+	fmt.Printf("remote set to '%s'\n", remote)
+}
+
 func processAction(tasks TaskList) {
 	priority := PriorityFromString(*priorityFlag)
 	var graft TaskNode = tasks // -golint
@@ -178,6 +195,13 @@ func processAction(tasks TaskList) {
 			priority = -1
 		}
 		doEditTask(tasks, task, priority, text)
+	case *remoteFlag:
+		if len(goopt.Args) < 1 {
+			doPrintRemote(tasks)
+		} else {
+			remote := goopt.Args[0]
+			doSetRemote(tasks, remote)
+		}
 	default:
 		doView(tasks)
 	}
