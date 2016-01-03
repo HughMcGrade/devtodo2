@@ -37,7 +37,7 @@ var titleFlag = goopt.Flag([]string{"--title"}, nil, "set the task list title", 
 var versionFlag = goopt.Flag([]string{"--version"}, nil, "show version", "")
 var infoFlag = goopt.Flag([]string{"-i", "--info"}, nil, "show information on a task", "")
 var importFlag = goopt.Flag([]string{"--import"}, nil, "import and synchronise TODO items from source code", "")
-var remoteFlag = goopt.Flag([]string{"--remote"}, nil, "set or print remote", "")
+var remoteFlag = goopt.Flag([]string{"--remote"}, nil, "set (for scp with format [name]@[remote]:[/path/to/file]) or print remote", "")
 var pullFlag = goopt.Flag([]string{"--pull"}, nil, "pull from remote", "")
 var pushFlag = goopt.Flag([]string{"--push"}, nil, "push to remote", "")
 
@@ -138,7 +138,7 @@ func doSetRemote(tasks TaskList, remote string) {
 
 func doPush(tasks TaskList) {
 	if len(tasks.Remote()) < 1 {
-		fmt.Println("remote must be set (use '--remote [remote]' before push")
+		fmt.Println("remote must be set (use '--remote [name]@[remote]:[/path/to/file]' before push")
 		return
 	}
 	cmd := exec.Command("scp", *fileFlag, tasks.Remote())
@@ -151,7 +151,7 @@ func doPush(tasks TaskList) {
 
 func doPull(tasks TaskList) {
 	if len(tasks.Remote()) < 1 {
-		fmt.Println("remote must be set (use '--remote [remote]' before pull")
+		fmt.Println("remote must be set (use '--remote [name]@[remote]:[/path/to/file]' before pull")
 		return
 	}
 	cmd := exec.Command("scp", tasks.Remote(), *fileFlag)
