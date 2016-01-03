@@ -37,7 +37,7 @@ var titleFlag = goopt.Flag([]string{"--title"}, nil, "set the task list title", 
 var versionFlag = goopt.Flag([]string{"--version"}, nil, "show version", "")
 var infoFlag = goopt.Flag([]string{"-i", "--info"}, nil, "show information on a task", "")
 var importFlag = goopt.Flag([]string{"--import"}, nil, "import and synchronise TODO items from source code", "")
-var remoteFlag = goopt.Flag([]string{"--remote"}, nil, "add or print remote", "")
+var remoteFlag = goopt.Flag([]string{"--remote"}, nil, "set or print remote", "")
 var pullFlag = goopt.Flag([]string{"--pull"}, nil, "pull from remote", "")
 var pushFlag = goopt.Flag([]string{"--push"}, nil, "push to remote", "")
 
