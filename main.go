@@ -23,6 +23,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"os/exec"
 )
 
 // Actions
@@ -123,16 +124,34 @@ func doShowInfo(tasks TaskList, index string) {
 
 func doPrintRemote(tasks TaskList) {
 	if len(tasks.Remote()) == 0 {
-		fmt.Printf("No remote set\n")
+		fmt.Println("No remote set")
 	} else {
-		fmt.Printf("%s\n", tasks.Remote())
+		fmt.Println(tasks.Remote())
 	}
 }
 
 func doSetRemote(tasks TaskList, remote string) {
 	tasks.SetRemote(remote)
 	saveTaskList(tasks)
-	fmt.Printf("remote set to '%s'\n", remote)
+	fmt.Println("remote set to '", remote, "'")
+}
+
+func doPush(tasks TaskList) {
+	cmd := exec.Command("scp", *fileFlag, tasks.Remote())
+	result, err := cmd.Output()
+	if err != nil {
+		fmt.Printf("%s\n", err)
+	}
+	fmt.Printf("%s\n", result)
+}
+
+func doPull(tasks TaskList) {
+	cmd := exec.Command("scp", tasks.Remote(), *fileFlag)
+	result, err := cmd.Output()
+	if err != nil {
+		fmt.Printf("%s\n", err)
+	}
+	fmt.Printf("%s\n", result)
 }
 
 func processAction(tasks TaskList) {
@@ -202,6 +221,10 @@ func processAction(tasks TaskList) {
 			remote := goopt.Args[0]
 			doSetRemote(tasks, remote)
 		}
+	case *pushFlag:
+		doPush(tasks)
+	case *pullFlag:
+		doPull(tasks)
 	default:
 		doView(tasks)
 	}
