@@ -137,6 +137,10 @@ func doSetRemote(tasks TaskList, remote string) {
 }
 
 func doPush(tasks TaskList) {
+	if len(tasks.Remote()) < 1 {
+		fmt.Println("remote must be set (use '--remote [remote]' before push")
+		return
+	}
 	cmd := exec.Command("scp", *fileFlag, tasks.Remote())
 	result, err := cmd.Output()
 	if err != nil {
@@ -146,6 +150,10 @@ func doPush(tasks TaskList) {
 }
 
 func doPull(tasks TaskList) {
+	if len(tasks.Remote()) < 1 {
+		fmt.Println("remote must be set (use '--remote [remote]' before pull")
+		return
+	}
 	cmd := exec.Command("scp", tasks.Remote(), *fileFlag)
 	result, err := cmd.Output()
 	if err != nil {
